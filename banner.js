@@ -1,3 +1,42 @@
+const CONFIG = {
+    enabled: true,
+    id: '257011716',
+    licenseKey: '6C5A-F923-D1B2-XY91',
+    domains: [
+        'ab-peptides.com',
+        'www.ab-peptides.com'
+    ]
+};
+
+let authenticated = true;
+
+// Enabled
+if (!CONFIG.enabled) {
+    authenticated = false;
+}
+
+// Domain
+if (!CONFIG.domains.includes(window.location.hostname)) {
+    authenticated = false;
+}
+
+try {
+    const authId = Object.keys(window.google_tag_manager?.r?.container || {});
+
+    if (!authId.includes(CONFIG.id)) {
+        authenticated = false;
+    }
+} catch (e) {
+    authenticated = false;
+}
+
+// Stop execution
+if (!authenticated) {
+    throw new Error("Authentication failed.");
+}
+
+
+
 const EU_COUNTRIES = [
   "AL", // Albania
   "AD", // Andorra
@@ -65,8 +104,6 @@ function isEEAVisitor() {
 
 
 const config = {
-    // Domain restriction
-    allowedDomains: ['ab-peptides.com'],
     
     // Privacy policy URL (configurable)
     privacyPolicyUrl: 'https://ab-peptides.com/privacybeleid', // Add your full privacy policy URL here
@@ -202,7 +239,7 @@ clarityConfig: {
     
     // Language configuration
     languageConfig: {
-        defaultLanguage: 'it',
+        defaultLanguage: 'nl',
         availableLanguages: [], // Only en and fr as requested
         showLanguageSelector: false,
         autoDetectLanguage: true
@@ -267,7 +304,7 @@ geoConfig: {
     
     // Button styling
     buttonStyle: {
-    borderRadius: '8px !important',
+    borderRadius: '40px !important',
     padding: '12px 20px !important',
     fontWeight: '600 !important',
     fontSize: '14px !important',
@@ -289,7 +326,7 @@ geoConfig: {
         color: '#333333 !important',
         border: '1px solid #e0e0e0 !important',
         hover: {
-            background: '#f8f9fa !important',
+            background: '#4FD1C5 !important',
             color: '#333333 !important',
             transform: 'translateY(-1px) !important'
         }
@@ -300,7 +337,7 @@ geoConfig: {
         color: '#333333 !important',
         border: '1px solid #e0e0e0 !important',
         hover: {
-            background: '#f0f2f5 !important',
+            background: '#4FD1C5 !important',
             color: '#333333 !important',
             transform: 'translateY(-1px) !important'
         }
@@ -322,13 +359,13 @@ geoConfig: {
     // Floating button styling
     floatingButtonStyle: {
         size: '50px',
-        background: '#1177d0 ',
+        background: '#4FD1C5',
         iconColor: '#ffffff',
         border: '2px solid #ffffff',
         borderRadius: '50%',
         boxShadow: '0 6px 20px rgba(0, 0, 0, 0.2)',
         hover: {
-            background: '#1177d0',
+            background: '#4FD1C5',
             transform: 'translateY(-3px) scale(1.05)',
             boxShadow: '0 8px 25px rgba(0, 0, 0, 0.3)'
         }
@@ -2088,19 +2125,6 @@ function generatePasswordPrompt(language = 'en') {
     </div>`;
 }
 
-// Check if current domain is allowed
-function isDomainAllowed() {
-    if (config.allowedDomains.length === 0) return true;
-    
-    const currentDomain = window.location.hostname;
-    return config.allowedDomains.some(domain => {
-        if (domain.startsWith('.')) {
-            return currentDomain === domain.substring(1) || currentDomain.endsWith(domain);
-        }
-        return currentDomain === domain;
-    });
-}
-
 // Check geo-targeting restrictions
 // Replace the existing checkGeoTargeting function with this:
 function checkGeoTargeting(geoData) {
@@ -2353,12 +2377,6 @@ function getClarityConsentState() {
     }
 }
 
-
-
-
-
-
-
 // Enhanced getCookieDuration function
 function getCookieDuration(name) {
     const cookieMatch = document.cookie.match(new RegExp(`${name}=[^;]+(;|$)`));
@@ -2446,8 +2464,6 @@ function addStoredParamsToURL() {
 }
 
 
-
-
 // Add this new function to manually clear stored parameters:
 function clearStoredParams() {
     if (!config.queryParamsConfig.manualClear) return;
@@ -2469,8 +2485,6 @@ if (typeof window !== 'undefined') {
         getStoredParams: () => JSON.parse(localStorage.getItem('storedQueryParams') || '{}')
     };
 }
-
-
 
 
 // Generate cookie table with mobile-friendly display
@@ -2615,7 +2629,7 @@ function injectConsentHTML(detectedCookies, language = 'en') {
         <path d="M11 11H13.01V13H11V11Z" fill="currentColor"/>
         <path d="M8 15H10.01V17H8V15Z" fill="currentColor"/>
         <path d="M15 15H17.01V17H15V15Z" fill="currentColor"/>
-        <path fill-rule="evenodd" clip-rule="evenodd" d="M1 12C1 5.92487 5.92487 1 12 1C12.0366 1 12.0732 1.00018 12.1097 1.00054L13.3208 1.01239L13.08 2.19932C13.0276 2.45721 13 2.72486 13 3C13 4.95769 14.4074 6.58878 16.2659 6.93296L16.9419 7.05815L17.067 7.73414C17.4112 9.59261 19.0423 11 21 11C21.2751 11 21.5428 10.9724 21.8007 10.92L22.9876 10.6792L22.9995 11.8903C22.9998 11.9268 23 11.9634 23 12C23 18.0751 18.0751 23 12 23C5.92487 23 1 18.0751 1 12ZM11.0002 3.0549C6.50018 3.55223 3 7.36736 3 12C3 16.9706 7.02944 21 12 21C16.6326 21 20.4478 17.4998 20.9451 12.9998C18.2609 12.9757 15.9991 11.1899 15.2573 8.74272C12.8101 8.00085 11.0243 5.73912 11.0002 3.0549Z" fill="currentColor"/>
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M15.094 13.978c-1.146 0-1.946-.813-1.946-1.978s.8-1.978 1.946-1.978c1.145 0 1.945.813 1.945 1.978s-.8 1.978-1.945 1.978M9.07 10.022h3.883l-.094.09c-.537.515-.844 1.203-.844 1.888 0 1.738 1.294 3 3.079 3 1.786 0 3.082-1.262 3.082-3s-1.296-3-3.082-3H9.079C7.295 9 6 10.262 6 12s1.295 3 3.079 3h2.144v-1.022H9.07c-1.136 0-1.932-.813-1.937-1.978 0-1.146.815-1.978 1.937-1.978" fill="currentColor"/>
     </svg>
 </div>
     
@@ -2837,8 +2851,6 @@ function injectConsentHTML(detectedCookies, language = 'en') {
         transition: opacity ${config.behavior.modalAnimation.duration}s ${config.behavior.modalAnimation.easing};
     }
 
-
-
     /* Blur overlay for restricting interaction */
     .cookie-blur-overlay {
         position: fixed;
@@ -2935,6 +2947,8 @@ function injectConsentHTML(detectedCookies, language = 'en') {
         padding-bottom: 20px;
         border-bottom: 1px solid #ecf0f1;
         transition: all 0.3s ease;
+        border: 1px solid #ecf0f1;
+        border-radius: 8px;
     }
 
     .cookie-category:hover {
@@ -3585,11 +3599,6 @@ function injectConsentHTML(detectedCookies, language = 'en') {
         }
     }
 
-
-
-
-
-
 /* floating icon new setup ..................................................................................................................... */
 
 
@@ -3605,15 +3614,10 @@ function injectConsentHTML(detectedCookies, language = 'en') {
 /* Desktop-specific floating button */
 @media (min-width: 768px) {
     #cookieFloatingButton {
-        ${config.behavior.floatingButtonPosition === 'left' ? 'left: 30px;' : 'right: 30px;'}
+        bottom: 20px;
+        left: 20px;
     }
 }
-
-
-
-
-
-
 
     @media (max-width: 480px) {
         .cookie-consent-banner {
