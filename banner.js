@@ -99,15 +99,10 @@ function isEEAVisitor() {
     return EU_COUNTRIES.includes(locationData.country);
 }
 
-
-
-
-
 const config = {
     
     // Privacy policy URL (configurable)
     privacyPolicyUrl: 'https://ab-peptides.com/privacybeleid', // Add your full privacy policy URL here
-
 
 
     // NEW: Cookie Banner Trigger Configuration
@@ -137,10 +132,6 @@ const config = {
            // '/shop/*'
         ]
     },
-
-
-
-  
    
     // Query Parameter Storage Configuration
     queryParamsConfig: {
@@ -166,9 +157,6 @@ clarityConfig: {
     loadBeforeConsent: false // NEW: Prevent loading before consent in regulated regions
 },
 
-    
-  
-    // Microsoft UET Configuration
     // Microsoft UET Configuration
     uetConfig: {
         enabled: true,
@@ -561,9 +549,7 @@ function setDefaultUetConsent() {
             'data_processing': config.uetConfig.enforceInEEA && EU_COUNTRIES.includes(locationData?.country || '') ? 
                 'LDU' : 'GDPR'
         },
-        'gcs': 'G100',
-        'timestamp': new Date().toISOString(),
-        'location_data': locationData
+        'gcs': 'G100'
     });
 }
 
@@ -1761,7 +1747,6 @@ if (savedLocation) {
         window.dataLayer = window.dataLayer || [];
         window.dataLayer.push({
             'event': 'locationInitialized',
-            'location_data': locationData,
             'timestamp': new Date().toISOString()
         });
     });
@@ -1822,7 +1807,6 @@ async function fetchLocationData() {
             return data;
             
         } catch (error) {
-            console.log(`Failed with ${apiUrl}:`, error);
             continue;
         }
     }
@@ -2190,14 +2174,12 @@ function detectUserLanguage(geoData) {
     if (config.behavior.rememberLanguage) {
         const preferredLanguage = getCookie('preferred_language');
         if (preferredLanguage && translations[preferredLanguage]) {
-            console.log('Using preferred language from cookie:', preferredLanguage);
             return preferredLanguage;
         }
     }
     
     // Then try to get language from browser settings
     const browserLang = (navigator.language || navigator.userLanguage || 'en').split('-')[0];
-    console.log('Browser language detected:', browserLang);
     
     if (translations[browserLang]) {
         // Save the detected language to cookie for future visits
@@ -2210,7 +2192,6 @@ function detectUserLanguage(geoData) {
     // Then try to get language from country if auto-detection is enabled
     if (config.languageConfig.autoDetectLanguage && geoData && geoData.country) {
         const countryLang = countryLanguageMap[geoData.country];
-        console.log('Country language detected:', countryLang, 'for country:', geoData.country);
         
         if (countryLang && translations[countryLang]) {
             // Save the detected language to cookie for future visits
@@ -2221,8 +2202,6 @@ function detectUserLanguage(geoData) {
         }
     }
     
-    // Final fallback to configured default language
-    console.log('Using default language:', config.languageConfig.defaultLanguage);
     return config.languageConfig.defaultLanguage || 'en';
 }
 // Get available languages for dropdown
@@ -2469,7 +2448,6 @@ function clearStoredParams() {
     if (!config.queryParamsConfig.manualClear) return;
     
     localStorage.removeItem('storedQueryParams');
-    console.log('Stored query parameters cleared');
     
     // Optional: Add UI feedback if you want
     if (typeof window.showAlert === 'function') {
@@ -3763,7 +3741,6 @@ function initializeCookieConsent(detectedCookies, language) {
 
    // NEW: Check if we should show on this URL
     if (!shouldShowOnCurrentUrl()) {
-        console.log('Cookie consent banner disabled for this URL');
         return; // Don't show the banner on this URL
     }
   
@@ -3834,14 +3811,12 @@ function sendClarityConsentSignal(consentGranted) {
         if (typeof window.clarity !== 'undefined') {
             // Send consent signal to Clarity
             window.clarity('consent', consentGranted);
-            console.log('Microsoft Clarity consent signal sent:', consentGranted);
             
             // Push to dataLayer for tracking
             window.dataLayer.push({
                 'event': 'clarity_consent_signal',
                 'clarity_consent': consentGranted,
-                'timestamp': new Date().toISOString(),
-                'location_data': locationData
+                'timestamp': new Date().toISOString()
             });
         }
     } catch (error) {
@@ -4168,10 +4143,6 @@ function hideFloatingButton() {
     }, 300);
 }
 
-
-
-
-
 // NEW: Enable/disable interaction restrictions
 function enableInteractionRestrictions() {
     if (!config.behavior.restrictInteraction.enabled) return;
@@ -4310,20 +4281,12 @@ function acceptAllCookies() {
             'functionality_storage': 'granted',
             'security_storage': 'granted'
         },
-        'gcs': 'G111', // Explicit GCS signal
-        'consent_status': 'accepted',
-        'consent_categories': consentData.categories,
-        'timestamp': new Date().toISOString(),
-        'location_data': locationData
+        'gcs': 'G111'
     });
 
      // NEW: Disable interaction restrictions when user accepts
     disableInteractionRestrictions();
 }
-
-
-
-
 
 function rejectAllCookies() {
 
@@ -4364,11 +4327,7 @@ function rejectAllCookies() {
             'functionality_storage': 'denied',
             'security_storage': 'granted'
         },
-        'gcs': 'G100', // Explicit GCS signal
-        'consent_status': 'rejected',
-        'consent_categories': consentData.categories,
-        'timestamp': new Date().toISOString(),
-        'location_data': locationData
+        'gcs': 'G100'
     });
 
      // NEW: Disable interaction restrictions when user accepts
@@ -4442,11 +4401,7 @@ function saveCustomSettings() {
                 'analytics_storage': 'granted',
                 'ad_storage': 'denied'
             },
-            'gcs': 'G101', // Explicit GCS signal
-            'consent_status': 'custom',
-            'consent_categories': consentData.categories,
-            'timestamp': new Date().toISOString(),
-            'location_data': locationData
+            'gcs': 'G101'
         });
     } else if (advertisingChecked && !analyticsChecked) {
         window.dataLayer.push({
@@ -4455,22 +4410,14 @@ function saveCustomSettings() {
                 'ad_storage': 'granted',
                 'analytics_storage': 'denied'
             },
-            'gcs': 'G110', // Explicit GCS signal
-            'consent_status': 'custom',
-            'consent_categories': consentData.categories,
-            'timestamp': new Date().toISOString(),
-            'location_data': locationData
+            'gcs': 'G110'
         });
     } else {
         // For all other cases (both accepted or both rejected)
         window.dataLayer.push({
             'event': 'cookie_consent_custom',
             'consent_mode': consentStates,
-            'gcs': gcsSignal, // Explicit GCS signal
-            'consent_status': 'custom',
-            'consent_categories': consentData.categories,
-            'timestamp': new Date().toISOString(),
-            'location_data': locationData
+            'gcs': gcsSignal
         });
     }
 
@@ -4478,12 +4425,6 @@ function saveCustomSettings() {
     disableInteractionRestrictions();
    
 }
-
-
-
-
-
-
 
 // Helper functions
 function clearNonEssentialCookies() {
@@ -4573,11 +4514,6 @@ function matchesUrlPattern(url, path, pattern) {
     return false;
 }
 
-
-
-
-
-
 function ensureClarityConsentSignal(consentGranted) {
     if (typeof window.clarity === 'function') {
         window.clarity('consent', consentGranted);
@@ -4589,16 +4525,7 @@ function ensureClarityConsentSignal(consentGranted) {
         window.clarity('consent', consentGranted);
     }
     
-    // Log for debugging
-    console.log('Microsoft Clarity consent signal sent:', consentGranted);
 }
-
-
-
-
-
-
-
 
 function clearCategoryCookies(category) {
     const cookies = scanAndCategorizeCookies()[category];
@@ -4664,9 +4591,6 @@ function initializeClarity(consentGranted) {
     }
 }
 
-
-
-
 // Function to send consent signal to Microsoft Clarity
 function sendClarityConsentSignal(consentGranted) {
     if (!config.clarityConfig.enabled || !config.clarityConfig.sendConsentSignal) return;
@@ -4674,25 +4598,16 @@ function sendClarityConsentSignal(consentGranted) {
     try {
         ensureClarityConsentSignal(consentGranted);
         
-        // Enhanced logging
-        console.log('Microsoft Clarity consent signal sent:', consentGranted, 
-                   'for region:', locationData?.country || 'unknown');
-        
         window.dataLayer.push({
             'event': 'clarity_consent_signal',
             'clarity_consent': consentGranted,
             'clarity_region': locationData?.country || 'unknown',
-            'timestamp': new Date().toISOString(),
-            'location_data': locationData
+            'timestamp': new Date().toISOString()
         });
     } catch (error) {
         console.error('Failed to send Clarity consent signal:', error);
     }
 }
-
-
-
-
 
 
 // Update consent mode for both Google and Microsoft UET
@@ -4766,9 +4681,7 @@ function updateConsentMode(consentData) {
         'consent_mode': consentStates,
         'gcs': gcsSignal,
         'consent_status': consentData.status,
-        'consent_categories': consentData.categories,
-        'timestamp': new Date().toISOString(),
-        'location_data': locationData
+        'consent_categories': consentData.categories
     });
 }
 
@@ -4803,15 +4716,12 @@ function sanitizeParamValue(value) {
 
 // Load analytics cookies function
 function loadAdvertisingCookies() {
-    console.log('Loading advertising cookies');
-    // This would typically load advertising scripts like Facebook Pixel, etc.
-    // Implementation depends on your specific advertising setup
+
 }
 
 // Load performance cookies function
 function loadPerformanceCookies() {
-    console.log('Loading performance cookies');
-    // This would typically load performance optimization scripts
+    
 }
 
 // Main execution flow
@@ -4819,16 +4729,13 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Ensure location data is loaded first
     try {
         if (!sessionStorage.getItem('locationData')) {
-            console.log('Fetching fresh location data...');
             locationData = await fetchLocationData(); // This will now push to dataLayer
         } else {
-            console.log('Using cached location data');
             locationData = JSON.parse(sessionStorage.getItem('locationData'));
             // Push cached data to dataLayer
             pushGeoDataToDataLayer(locationData);
         }
         
-        console.log('Current location data:', locationData);
     } catch (e) {
         console.error('Failed to load location data:', e);
     }
@@ -4847,19 +4754,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         ensureClarityConsentSignal(existingConsent);
     }
 
-
-
-
-
-
-
-  
- // Check if domain is allowed
-    if (!isDomainAllowed()) {
-        console.log('Cookie consent banner not shown - domain not allowed');
-        return;
-    }
-
     // Load analytics data from storage
     if (config.analytics.enabled) {
         loadAnalyticsData();
@@ -4874,7 +4768,6 @@ document.addEventListener('DOMContentLoaded', async function() {
       // Check geo-targeting before proceeding
     const geoAllowed = checkGeoTargeting(locationData);
     if (!geoAllowed) {
-        console.log('Cookie consent banner not shown - geo-targeting restriction');
         return;
     }
 
@@ -4893,8 +4786,6 @@ document.addEventListener('DOMContentLoaded', async function() {
 
 });
 
-
-
 // Add this function to check consent on each page load
 function checkExistingClarityConsent() {
     const consentCookie = getCookie('cookie_consent');
@@ -4909,7 +4800,6 @@ function checkExistingClarityConsent() {
         return null;
     }
 }
-
 
 // Export functions for global access if needed
 if (typeof window !== 'undefined') {
