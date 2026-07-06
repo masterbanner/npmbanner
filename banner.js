@@ -938,8 +938,8 @@ const translations = {
         description: "Wir verwenden Cookies, um Ihr Surferlebnis zu verbessern, personalisierte Anzeigen oder Inhalte bereitzustellen und unseren Datenverkehr zu analysieren. Wenn Sie auf \"Alle akzeptieren\" klicken, erklären Sie sich mit der Verwendung von Cookies einverstanden.",
         privacy: "Datenschutzrichtlinie",
         customize: "Anpassen",
-        reject: "Alle ablehnen",
-        accept: "Alle akzeptieren",
+        reject: "Ontkennen",
+        accept: "Accepteren",
         essential: "Essenzielle Cookies",
         essentialDesc: "Für Website-Funktionalität",
         analytics: "Analytics-Cookies",
@@ -1074,8 +1074,8 @@ const translations = {
         description: "We gebruiken cookies om uw browse-ervaring te verbeteren, gepersonaliseerde advertenties of inhoud te bieden en ons verkeer te analyseren. Door op \"Alles accepteren\" te klikken, stemt u in met het gebruik van cookies.",
         privacy: "Privacybeleid",
         customize: "Aanpassen",
-        reject: "Alles weigeren",
-        accept: "Alles accepteren",
+        reject: "Ontkennen",
+        accept: "Accepteren",
         essential: "Essentiële Cookies",
         essentialDesc: "Noodzakelijk voor websitefunctionaliteit",
         analytics: "Analysecookies",
@@ -2705,6 +2705,9 @@ function injectConsentHTML(detectedCookies, language = 'en') {
     gap: 12px;
     margin-top: 8px;
     width: 100%;
+    height: 47px;
+    align-items: center;
+    justify-content: center;
 }
 
     .cookie-btn {
