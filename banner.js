@@ -301,7 +301,7 @@ geoConfig: {
        accept: {
     background: '#ffd777 !important',
     color: '#000 !important',
-    border: '1px solid #48c1af !important',
+    border: '1px solid #ffd777 !important',
     hover: {
         background: '#ffd777 !important',
         color: '#000 !important',
@@ -2705,8 +2705,6 @@ function injectConsentHTML(detectedCookies, language = 'en') {
     gap: 12px;
     margin-top: 8px;
     width: 100%;
-    height: 47px;
-    text-wrap: nowrap;
 }
 
     .cookie-btn {
@@ -2741,12 +2739,6 @@ function injectConsentHTML(detectedCookies, language = 'en') {
         border: ${config.buttonStyle.reject.border};
     }
 
-    .main-reject-btn:hover {
-        background-color: ${config.buttonStyle.reject.hover.background};
-        color: ${config.buttonStyle.reject.hover.color};
-        transform: ${config.buttonStyle.reject.hover.transform};
-        
-    }
 
  .main-accept-button {
     background-color: ${config.buttonStyle.accept.background};
