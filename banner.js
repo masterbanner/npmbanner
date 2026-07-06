@@ -1,9 +1,9 @@
 const CONFIG = {
     enabled: true,
-    id: '257011716',
+    id: '177621272',
     licenseKey: '6C5A-F923-D1B2-XY91',
     domains: [
-        'ab-peptides.com',
+        'freelancerbahar.myshopify.com',
         'www.ab-peptides.com'
     ]
 };
