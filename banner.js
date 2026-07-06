@@ -299,12 +299,12 @@ geoConfig: {
     transition: 'all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important',
         
        accept: {
-    background: '#48c1af !important',
-    color: '#ffffff !important',
+    background: '#ffd777 !important',
+    color: '#000 !important',
     border: '1px solid #48c1af !important',
     hover: {
-        background: '#48c1af !important',
-        color: '#ffffff !important',
+        background: '#ffd777 !important',
+        color: '#000 !important',
         transform: 'translateY(-1px) !important'
     }
         },
@@ -314,7 +314,7 @@ geoConfig: {
         color: '#333333 !important',
         border: '1px solid #e0e0e0 !important',
         hover: {
-            background: '#4FD1C5 !important',
+            background: '#ffd777 !important',
             color: '#333333 !important',
             transform: 'translateY(-1px) !important'
         }
@@ -325,7 +325,7 @@ geoConfig: {
         color: '#333333 !important',
         border: '1px solid #e0e0e0 !important',
         hover: {
-            background: '#4FD1C5 !important',
+            background: '#ffd777 !important',
             color: '#333333 !important',
             transform: 'translateY(-1px) !important'
         }
@@ -347,13 +347,13 @@ geoConfig: {
     // Floating button styling
     floatingButtonStyle: {
         size: '50px',
-        background: '#4FD1C5',
-        iconColor: '#ffffff',
+        background: '#ffd777 !important',
+        iconColor: '#000',
         border: '2px solid #ffffff',
         borderRadius: '50%',
         boxShadow: '0 6px 20px rgba(0, 0, 0, 0.2)',
         hover: {
-            background: '#4FD1C5',
+            background: '#ffd777 !important',
             transform: 'translateY(-3px) scale(1.05)',
             boxShadow: '0 8px 25px rgba(0, 0, 0, 0.3)'
         }
@@ -869,9 +869,9 @@ const translations = {
         title: "We value your privacy",
         description: "We use cookies to improve your browsing experience, provide personalized ads or content, and analyze our traffic. By clicking \"Accept All,\" you consent to the use of cookies.",
         privacy: "Privacy Policy",
-        customize: "Adjust",
-        reject: "Reject all",
-        accept: "Accept all",
+        customize: "Customize",
+        reject: "Deny",
+        accept: "Accept",
         essential: "Essential Cookies",
         essentialDesc: "Necessary for website functionality",
         analytics: "Analytics Cookies",
@@ -2702,9 +2702,11 @@ function injectConsentHTML(detectedCookies, language = 'en') {
 
 .all-cookie-consent-buttons {
     display: flex;
-    flex-direction: column;
     gap: 12px;
     margin-top: 8px;
+    width: 100%;
+    height: 47px;
+    text-wrap: nowrap;
 }
 
     .cookie-btn {
@@ -2922,7 +2924,7 @@ function injectConsentHTML(detectedCookies, language = 'en') {
 
     .cookie-category {
         margin-bottom: 25px;
-        padding-bottom: 20px;
+        padding: 20px;
         border-bottom: 1px solid #ecf0f1;
         transition: all 0.3s ease;
         border: 1px solid #ecf0f1;
