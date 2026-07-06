@@ -336,7 +336,7 @@ geoConfig: {
         color: '#333333 !important',
         border: '1px solid #e0e0e0 !important',
         hover: {
-            background: '#f8f9fa !important',
+            background: '#ffd777 !important',
             color: '#333333 !important',
             transform: 'translateY(-1px) !important'
         }
@@ -2738,7 +2738,12 @@ function injectConsentHTML(detectedCookies, language = 'en') {
         color: ${config.buttonStyle.reject.color};
         border: ${config.buttonStyle.reject.border};
     }
-
+    
+ .main-reject-btn:hover {
+        background-color: ${config.buttonStyle.reject.background};
+        color: ${config.buttonStyle.reject.color};
+        border: ${config.buttonStyle.reject.border};
+    }
 
  .main-accept-button {
     background-color: ${config.buttonStyle.accept.background};
@@ -3159,12 +3164,6 @@ function injectConsentHTML(detectedCookies, language = 'en') {
     .cookie-settings-button.show {
         opacity: 1;
         transform: translateY(0);
-    }
-
-    .cookie-settings-button:hover {
-        background-color: ${config.floatingButtonStyle.hover.background};
-        transform: ${config.floatingButtonStyle.hover.transform};
-        box-shadow: ${config.floatingButtonStyle.hover.boxShadow};
     }
 
     #cookieFloatingButton.cookie-settings-button svg,
