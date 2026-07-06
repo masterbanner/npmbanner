@@ -2729,12 +2729,6 @@ function injectConsentHTML(detectedCookies, language = 'en') {
         border: ${config.buttonStyle.adjust.border};
     }
 
-    .main-adjust-button:hover {
-        background-color: ${config.buttonStyle.adjust.hover.background};
-        color: ${config.buttonStyle.adjust.hover.color};
-        transform: ${config.buttonStyle.adjust.hover.transform};
-        
-    }
 
     .main-reject-btn {
         background-color: ${config.buttonStyle.reject.background};
@@ -2766,13 +2760,6 @@ function injectConsentHTML(detectedCookies, language = 'en') {
         background-color: ${config.buttonStyle.save.background};
         color: ${config.buttonStyle.save.color};
         border: ${config.buttonStyle.save.border};
-    }
-
-    .main-save-btn:hover {
-        background-color: ${config.buttonStyle.save.hover.background};
-        color: ${config.buttonStyle.save.hover.color};
-        transform: ${config.buttonStyle.save.hover.transform};
-        box-shadow: 0 5px 10px rgba(0,0,0,0.15);
     }
 
     /* Modal Footer Buttons */
@@ -3022,7 +3009,6 @@ function injectConsentHTML(detectedCookies, language = 'en') {
 
     .cookie-details-container:hover {
         box-shadow: 0 3px 12px rgba(0,0,0,0.1);
-        border-color: ${config.buttonStyle.accept.background};
     }
 
     .cookie-details-header {
@@ -3521,7 +3507,7 @@ function injectConsentHTML(detectedCookies, language = 'en') {
         
         .cookie-btn {
             flex: 1;
-            min-width: 120px;
+            text-wrap: nowrap;
         }
         
         .cookie-btn:last-child {
