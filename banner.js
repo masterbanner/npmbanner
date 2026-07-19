@@ -2747,6 +2747,7 @@ function injectConsentHTML(detectedCookies, language = 'en') {
     background-color: ${config.buttonStyle.accept.hover.background};
     color: ${config.buttonStyle.accept.hover.color};
     transform: ${config.buttonStyle.accept.hover.transform};
+    border: ${config.buttonStyle.accept.hover.border};
     
 }
 
@@ -3569,7 +3570,7 @@ function injectConsentHTML(detectedCookies, language = 'en') {
 @media (min-width: 768px) {
     #cookieFloatingButton {
         bottom: 20px;
-        left: 20px;
+        right: 20px;
     }
 }
 
