@@ -1,41 +1,4 @@
-const CONFIG = {
-    enabled: true,
-    id: '177621272',
-    licenseKey: '6C5A-F923-D1B2-XY91',
-    domains: [
-        'freelancerbahar.myshopify.com',
-        'www.ab-peptides.com'
-    ]
-};
-
-let authenticated = true;
-
-// Enabled
-if (!CONFIG.enabled) {
-    authenticated = false;
-}
-
-// Domain
-if (!CONFIG.domains.includes(window.location.hostname)) {
-    authenticated = false;
-}
-
-try {
-    const authId = Object.keys(window.google_tag_manager?.r?.container || {});
-
-    if (!authId.includes(CONFIG.id)) {
-        authenticated = false;
-    }
-} catch (e) {
-    authenticated = false;
-}
-
-// Stop execution
-if (!authenticated) {
-    throw new Error("Authentication failed.");
-}
-
-
+(function() {
 
 const EU_COUNTRIES = [
   "AL", // Albania
@@ -91,18 +54,25 @@ const EU_COUNTRIES = [
   "VA", // Vatican City
 ];
 
+const checkDomain = 'dev-trackingproguru.pantheonsite.io';
+  if(location.hostname !== checkDomain) return;
 
-// Function to check if visitor is from EEA/UK/CH
+  
 // Single consolidated function to check if visitor is from EEA/UK/CH
 function isEEAVisitor() {
-    if (!locationData || !locationData.country) return true; // Default to requiring consent if unknown
-    return EU_COUNTRIES.includes(locationData.country);
+    if (!locationData || !locationData.country) {
+        return true; // Default to requiring consent if location is unknown
+    }
+
+    const country = locationData.country.toUpperCase();
+
+    return country === 'BD' || EU_COUNTRIES.includes(country);
 }
 
 const config = {
     
     // Privacy policy URL (configurable)
-    privacyPolicyUrl: 'https://ab-peptides.com/privacybeleid', // Add your full privacy policy URL here
+    privacyPolicyUrl: 'https://medicatie.nu/artikelen', // Add your full privacy policy URL here
 
 
     // NEW: Cookie Banner Trigger Configuration
@@ -187,9 +157,9 @@ clarityConfig: {
         
         showFloatingButton: true,
         showAdminButton: false,
-        floatingButtonPosition: 'left',
-        adminButtonPosition: 'left',
-        bannerPosition: 'left',
+        floatingButtonPosition: 'right',
+        adminButtonPosition: 'right',
+        bannerPosition: 'right',
 
 
        
@@ -299,13 +269,14 @@ geoConfig: {
     transition: 'all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important',
         
        accept: {
-    background: '#ffd777 !important',
-    color: '#000 !important',
-    border: '1px solid #ffd777 !important',
+    background: '#4fd1c5 !important',
+    color: 'white !important',
+    border: '1px solid #4fd1c5 !important',
     hover: {
-        background: '#ffd777 !important',
+        background: '#F6AD55 !important',
         color: '#000 !important',
-        transform: 'translateY(-1px) !important'
+        transform: 'translateY(-1px) !important',
+        border: '1px solid #F6AD55 !important',
     }
         },
         
@@ -347,13 +318,13 @@ geoConfig: {
     // Floating button styling
     floatingButtonStyle: {
         size: '50px',
-        background: '#ffd777 !important',
+        background: '#4fd1c5 !important',
         iconColor: '#000',
         border: '2px solid #ffffff',
         borderRadius: '50%',
         boxShadow: '0 6px 20px rgba(0, 0, 0, 0.2)',
         hover: {
-            background: '#ffd777 !important',
+            background: '#4fd1c5 !important',
             transform: 'translateY(-3px) scale(1.05)',
             boxShadow: '0 8px 25px rgba(0, 0, 0, 0.3)'
         }
@@ -1756,84 +1727,110 @@ if (savedLocation) {
 async function fetchLocationData() {
     // Return cached data if available
     const cachedData = sessionStorage.getItem('locationData');
+
     if (cachedData) {
         const parsedData = JSON.parse(cachedData);
-        // Push cached location data to dataLayer
         pushGeoDataToDataLayer(parsedData);
         return parsedData;
     }
 
     const APIs = [
-        'https://ipinfo.io/json?token=4c1e5d00e0ac93',
         'https://ipapi.co/json/',
-        'https://geolocation-db.com/json/'
+        'https://ipwho.is/'
     ];
+
+    function clean(value) {
+        return (
+            value === undefined ||
+            value === null ||
+            value === '' ||
+            value === 'Not found'
+        ) ? '' : value;
+    }
 
     for (const apiUrl of APIs) {
         try {
             const controller = new AbortController();
             const timeout = setTimeout(() => controller.abort(), 3000);
-            
-            const response = await fetch(apiUrl, { signal: controller.signal });
+
+            const response = await fetch(apiUrl, {
+                signal: controller.signal
+            });
+
             clearTimeout(timeout);
-            
-            if (!response.ok) continue;
-            
+
+            if (!response.ok) {
+                continue;
+            }
+
             const payload = await response.json();
-            
-            // Standardize the response format with all possible fields
+
+            // Skip invalid API responses
+            if (payload.success === false || payload.error) {
+                continue;
+            }
+
+            const country = clean(
+                payload.country_code ||
+                payload.country ||
+                (payload.country && payload.country.iso_code)
+            );
+
+            if (!country) {
+                continue;
+            }
+
             const data = {
-                ip: payload.ip || '',
-                country: payload.country || payload.country_code || '',
-                country_name: payload.country_name || '',
-                region: payload.region || payload.regionName || '',
-                city: payload.city || '',
-                postal: payload.postal || payload.zip || '',
-                latitude: payload.latitude || payload.lat || '',
-                longitude: payload.longitude || payload.lon || payload.lng || '',
-                timezone: payload.timezone || '',
-                org: payload.org || '',
-                asn: payload.asn || '',
-                continent: payload.continent || getContinentFromCountry(payload.country || payload.country_code || ''),
-                hostname: payload.hostname || ''
+                ip: clean(payload.ip),
+                country: country,
+                country_name: clean(
+                    payload.country_name ||
+                    (payload.country && payload.country.name)
+                ),
+                region: clean(payload.region),
+                city: clean(payload.city),
+                postal: clean(payload.postal || payload.zip),
+                latitude: clean(payload.latitude || payload.lat),
+                longitude: clean(payload.longitude || payload.lon),
+                timezone: clean(payload.timezone),
+                org: clean(payload.org || payload.connection?.isp),
+                asn: clean(payload.asn || payload.connection?.asn),
+                continent: clean(payload.continent) || getContinentFromCountry(country),
+                hostname: window.location.hostname
             };
 
-            // Cache the result
             sessionStorage.setItem('locationData', JSON.stringify(data));
-            
-            // Push the geo data to dataLayer
+
             pushGeoDataToDataLayer(data);
-            
+
             return data;
-            
+
         } catch (error) {
-            continue;
+            // Try the next API
         }
     }
 
-    // All APIs failed - fallback to browser language
-    console.warn("All geolocation APIs failed - using fallback");
+    // Fallback if all APIs fail
     const fallbackData = {
         ip: '',
-        country: "Unknown",
-        country_name: "Unknown",
-        region: "Unknown",
-        city: "Unknown",
+        country: 'Unknown',
+        country_name: 'Unknown',
+        region: 'Unknown',
+        city: 'Unknown',
         postal: '',
         latitude: '',
         longitude: '',
-        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "Unknown",
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Unknown',
         org: '',
         asn: '',
-        continent: "Unknown",
+        continent: 'Unknown',
         hostname: window.location.hostname
     };
-    
+
     sessionStorage.setItem('locationData', JSON.stringify(fallbackData));
-    
-    // Push fallback data to dataLayer
+
     pushGeoDataToDataLayer(fallbackData);
-    
+
     return fallbackData;
 }
 
@@ -2638,7 +2635,7 @@ function injectConsentHTML(detectedCookies, language = 'en') {
     .cookie-consent-banner {
         position: fixed;
         bottom: 20px;
-        ${config.behavior.bannerPosition === 'left' ? 'left: 20px;' : 'right: 20px;'}
+        ${config.behavior.bannerPosition === 'right' ? 'right: 20px;' : 'left: 20px;'}
         width: ${config.bannerStyle.width};
         background: ${config.bannerStyle.background};
         border-radius: ${config.bannerStyle.borderRadius};
@@ -2702,12 +2699,9 @@ function injectConsentHTML(detectedCookies, language = 'en') {
 
 .all-cookie-consent-buttons {
     display: flex;
+    flex-direction: column;
     gap: 12px;
     margin-top: 8px;
-    width: 100%;
-    height: 47px;
-    align-items: center;
-    justify-content: center;
 }
 
     .cookie-btn {
@@ -4803,3 +4797,4 @@ if (typeof window !== 'undefined') {
         setBlurDensity: setBlurDensity
     };
 }
+}());
